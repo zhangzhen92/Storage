@@ -1,0 +1,36 @@
+android 中内存与外存详解
+
+
+外存分类：
+特点：    1·并非时刻存在，用户可以通过USB存储形式设置将其移除；
+          2·它是全局可读的；
+          3·用户卸载的时候（如果文件是在getExternalFileDir或者是在getExternalCache中，也将清除，如果是在SD下不清除）
+          4·可以与其他APP共享数据资源
+--------------------------------一下文件夹下称为外存的共有目录（九大共有目录）-------------------------------------------------------------------
+          Environment.getExternalStorageDirectory()      /storage/emulated/0    SD卡根目录
+          Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)： /storage/emulated/0/Movies(指定公共文件夹下，若传入“”则是SD卡根目录)
+
+          -----------------------以下两个外存文件若APP卸载文件也就不存在了（称为外存的私有目录）--------------------------------------------
+          context.getExternalFileDir(Environment.DIRECTORY_MOVIES)   /Storage/emulated/0/android/data/包名/files/
+          context.getExternalCacheDir()                             /Storage/emulated/0/android/data/包名/cache/
+
+
+
+
+ 内存分类：
+ 特点： 1·始终可用
+        2·只有当前应用可以访问当前的文件
+        3·应用卸载数据资源自动消失
+        4·适用于其他应用无法访问其隐私资源
+        context.getFileDir()-------->       /data/data/包名/files
+        context.getCacheDir()------>        /data/data/包名/cache     (次两个文件夹若手机不root无法访问)
+
+         ActivityManager systemService = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+         int memoryClass = systemService.getMemoryClass();                    //分配的内存
+         int largeMemoryClass = systemService.getLargeMemoryClass();         //分配的最大内存
+         long totalMemory = Runtime.getRuntime().totalMemory();             //运行时总的内存分配
+         ong freeMemory = Runtime.getRuntime().freeMemory();               //运行时未使用的内存
+
+
+ -------------------------------------------------------------------------------------------------------------
+ 一般在设置中清除缓存和清除数据   就是    清除的内存   和     外存中私有文件夹下的数据
